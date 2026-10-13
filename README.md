@@ -1,5 +1,10 @@
 # Agent Office
 
+**Cài mới từ GitHub:** [How to install — hướng dẫn cài đặt](docs/install.md).
+
+Hướng dẫn gồm môi trường Linux/WSL2, CLI login, build, tạo profile lần đầu,
+cấu hình FE/BE, cập nhật submodule và xử lý lỗi. Phần bên dưới dành cho workspace đã cài.
+
 Start from LOG:
 
 ```bash

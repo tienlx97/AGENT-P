@@ -1,5 +1,7 @@
 # One configuration authority
 
+For the first local profile, use [installation step 5](../docs/install.md#5-tạo-profile-local-lần-đầu).
+
 Use Agent settings in the app. The gear button opens the same screen in office mode.
 
 - Workspace profile: `../.local/state/config/Electron/config.json`

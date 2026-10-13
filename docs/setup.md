@@ -1,5 +1,8 @@
 # Current setup
 
+Fresh clone or a new machine: follow [How to install](install.md) first.
+The instructions below describe the existing configured LOG workspace.
+
 Launch `./agent-office/scripts/launch-office.sh` from LOG. The old
 `./scripts/launch-office.sh` remains valid through a compatibility symlink.
 Select the existing `.local/state/home` workspace if the picker appears.

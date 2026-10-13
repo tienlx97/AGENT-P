@@ -279,11 +279,15 @@ cd ..
 Test UI dùng profile tạm và không chạy model. Playwright chỉ phục vụ kiểm thử,
 không bắt buộc để mở ứng dụng bình thường. `npm ci` có thể gỡ dependency cài tạm này.
 
-**Lưu ý về full harness:** `./harness/verify.sh` hiện còn gọi hai suite worker cũ
-phụ thuộc layout LOG ban đầu, symlink `LOG/scripts` và worktree `LOG/worktrees/fe-smoke`
-(và `be-smoke`). Chúng chưa độc lập trên một clone mới. Không coi thiếu những fixture
-này là lỗi cài ứng dụng, và không tuyên bố full harness đã pass trên máy mới khi
-chưa thiết lập fixtures. Các lệnh độc lập phía trên là bước kiểm tra cài đặt.
+**Full harness**, từ repo root:
+
+```bash
+./harness/verify.sh
+```
+
+Hai suite worker dùng Git worktree tạm và CLI fixture, không cần các symlink LOG
+cũ, worktree fe-smoke/be-smoke cố định hay đăng nhập provider. Máy vẫn cần Node,
+Python, Git và bubblewrap hoạt động. Test GUI là bước riêng phía trên.
 
 ## 8. Cập nhật
 

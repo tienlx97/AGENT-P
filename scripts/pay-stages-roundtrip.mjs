@@ -1,9 +1,9 @@
 import assert from 'node:assert/strict';
 import { readFileSync, writeFileSync } from 'node:fs';
-import { pathToFileURL } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import { execFileSync } from 'node:child_process';
-const root='/home/capybara/projects/work/LOG';
-const tasks=JSON.parse(readFileSync(`${root}/evidence/phase4-worktrees.json`));
+const root=fileURLToPath(new URL('../',import.meta.url)).replace(/\/$/,'');
+const tasks=JSON.parse(readFileSync(`${root}/.local/evidence/phase4-worktrees.json`));
 const fe=tasks.find(x=>x.repo==='FE'),be=tasks.find(x=>x.repo==='BE');
 const api='http://127.0.0.1:8099';
 const fetchHttp=globalThis.fetch;
@@ -37,5 +37,5 @@ const invalid=structuredClone(editedTerms);invalid[0].paymentOccurrences[0].paym
 const refused=await updateContract(id,values,{paymentTerms:invalid,version:final.contract.version,lines:final.contract.lines});assert.equal(refused.success,false);assert.equal(requests.at(-1).status,400);
 const retained=await getContract(id);assert.deepEqual(retained.contract.paymentTerms,final.contract.paymentTerms);assert.equal(retained.contract.version,final.contract.version);
 const evidence={featureId:'PAY-STAGES',contractId:id,FE:{cwd:fe.cwd,branch:fe.branch,base:execFileSync('git',['-C',fe.cwd,'rev-parse','HEAD'],{encoding:'utf8'}).trim()},BE:{cwd:be.cwd,branch:be.branch,base:execFileSync('git',['-C',be.cwd,'rev-parse','HEAD'],{encoding:'utf8'}).trim()},requests,contract:retained.contract};
-writeFileSync(`${root}/evidence/phase4-roundtrip.json`,JSON.stringify(evidence,null,2)+'\n');
+writeFileSync(`${root}/.local/evidence/phase4-roundtrip.json`,JSON.stringify(evidence,null,2)+'\n');
 console.log('PASS actual FE create/update/get adapter against paired BE HTTP API: ordered splits, legacy default, invalid rejection without data/version loss.');

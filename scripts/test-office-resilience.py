@@ -2,8 +2,9 @@
 """Real OS/process tests with synthetic CLI protocol fixtures; zero provider calls."""
 import contextlib, importlib.util, io, json, pathlib, tempfile, time, unittest
 from unittest.mock import patch
-ROOT=pathlib.Path(__file__).resolve().parents[2]
-spec=importlib.util.spec_from_file_location('worker',ROOT/'scripts/office-worker.py')
+from worker_test_fixture import workspace
+_FIXTURE_HOME,ROOT=workspace()
+spec=importlib.util.spec_from_file_location('worker',pathlib.Path(__file__).with_name('office-worker.py'))
 worker=importlib.util.module_from_spec(spec);spec.loader.exec_module(worker)
 FIXTURE='''#!/usr/bin/python3
 import json,os,pathlib,sys,time

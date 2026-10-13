@@ -1,22 +1,40 @@
-# Layout migration
+# Layout migration and cleanup
 
-`python3 agent-office/scripts/migrate-layout.py` prints the mapping.
-`--apply` migrates only when the office/worker processes are stopped, backs up the
-profile, retains legacy symlinks and runs Git worktree repair for FE and BE.
-The migration on 2026-10-13 moved app, scripts, policies, docs and local state/toolchain.
-No existing worktree content, patch or run history was removed.
+Current layout: LOG contains FE-P, BE-P and agent-office. Root-level aliases such
+as docs, evidence, scripts, office-state and munder-difflin have been removed.
+Use `agent-office/scripts/launch-office.sh` from LOG, or `scripts/launch-office.sh`
+from inside agent-office.
 
-Legacy paths are deliberately retained: historical run records and Git worktree
-metadata can still reference them. They resolve to the same files. New runs use the
-canonical `.local/state/home`. Do not remove those links merely to tidy LOG.
+## Initial consolidation
 
-For rollback, close the app, restore the backed-up config and move each target back
-to its original path after removing ONLY its compatibility symlink. For scripts,
-retain the migration utility separately; restore the prior launcher from the archive
-or point its root to the moved app. Run `git -C FE-P worktree repair` and its BE
-counterpart, then check every worktree with `git status` before restarting.
-Runtime backups are in `.local/backups/`; no provider credentials are in the backup.
+`scripts/migrate-layout.py` documents the original move into agent-office. It moved
+app, scripts, policies, docs and local state/toolchain, backed up the profile, and
+initially kept aliases for historical paths. This is an upgrade utility for the
+old layout, not an installer for a new clone. Fresh installs use docs/install.md.
 
-Blog, landing-remotion and prototypes remain in the upstream app repository because
-the audit did not establish they were unused. Build toolchain and downloaded packages
-remain in `.local/toolchain` because the source build depends on them.
+## Removing the old aliases
+
+`scripts/remove-legacy-links.py` previews known aliases; `--apply` first migrates
+runtime JSON paths, corrects toolchain wrappers and repairs every Git worktree at
+its physical location, then unlinks the aliases. Close the office and stop workers
+first. Unexpected symlink targets are rejected; ordinary directories at legacy
+paths are never removed. Original changed metadata and the cleanup report are
+under `.local/backups/remove-aliases-*/`. Log and patch contents remain historical.
+
+Cleanup on 2026-10-13 removed all nine root aliases. Two clean persistent smoke
+worktrees were also removed using Git. Tests now create disposable repositories
+and do not require those old fixtures. The 16 task worktrees and run records remain;
+FE/BE source checkouts are unchanged.
+
+## What remains
+
+- `docs/`: installation, operation, design decisions and archived implementation context.
+- `.local/evidence/`: verification artifacts and screenshots used to review previous work.
+- `.local/state/`: profile, task history and task worktrees; preserve uncommitted work.
+- `.local/toolchain/`: compiler/runtime files still used for source builds.
+- `.local/backups/`: metadata before migrations, retained for recovery.
+
+Recovery requires closing the app, restoring the relevant backed-up metadata and
+recreating the old aliases if restoring old absolute paths. Run Git worktree repair
+for both product repositories before reopening. Do not move or delete task worktrees
+with an ordinary recursive filesystem command.

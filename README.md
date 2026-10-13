@@ -26,7 +26,7 @@ Folders: `app/` is the existing Munder Git repo, `scripts/` launches isolated
 workers, `harness/` points to the app's verification harness, `policies/` and
 `docs/` describe behavior, `.local/` holds state, worktrees, toolchain and evidence.
 FE-P and BE-P remain outside this folder as independent repositories.
-Old LOG paths are compatibility symlinks, not extra copies.
+Old LOG aliases were removed after migrating runtime paths. Use the paths above.
 
 ```bash
 ./agent-office/harness/verify.sh

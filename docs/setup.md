@@ -3,8 +3,7 @@
 Fresh clone or a new machine: follow [How to install](install.md) first.
 The instructions below describe the existing configured LOG workspace.
 
-Launch `./agent-office/scripts/launch-office.sh` from LOG. The old
-`./scripts/launch-office.sh` remains valid through a compatibility symlink.
+Launch `./agent-office/scripts/launch-office.sh` from LOG. The old LOG-root `./scripts/launch-office.sh` alias has been removed.
 Select the existing `.local/state/home` workspace if the picker appears.
 
 Configure roles once in Agent settings. Select a role, choose runtime/model/effort,

@@ -1,14 +1,16 @@
 #!/usr/bin/env python3
 import importlib.util, pathlib, tempfile, subprocess, unittest
-ROOT=pathlib.Path(__file__).resolve().parents[2]
-spec=importlib.util.spec_from_file_location('worker', ROOT/'scripts/office-worker.py')
+from worker_test_fixture import workspace
+_FIXTURE_HOME,ROOT=workspace()
+spec=importlib.util.spec_from_file_location('worker', pathlib.Path(__file__).with_name('office-worker.py'))
 worker=importlib.util.module_from_spec(spec);spec.loader.exec_module(worker)
+worker.RUNTIMES = {name: pathlib.Path('/usr/bin/python3') for name in ('codex', 'claude')}
 
 class IsolationTests(unittest.TestCase):
     def test_opposite_repo_and_host_secrets_are_absent(self):
         with tempfile.TemporaryDirectory() as scratch:
             args=worker.sandbox(ROOT/'worktrees/fe-smoke','codex',pathlib.Path(scratch),[])
-            result=subprocess.run(args[:-1]+['/bin/sh','-c',f'test ! -e {ROOT}/BE-P && test ! -e /home/capybara/.config/gh/hosts.yml && test ! -e /home/capybara/.ssh'],capture_output=True,text=True)
+            result=subprocess.run(args[:-1]+['/bin/sh','-c',f'test ! -e {ROOT}/BE-P && test ! -e {pathlib.Path.home()}/.config/gh/hosts.yml && test ! -e {pathlib.Path.home()}/.ssh'],capture_output=True,text=True)
             self.assertEqual(result.returncode,0,result.stderr)
     def test_git_common_directory_is_read_only(self):
         with tempfile.TemporaryDirectory() as scratch:

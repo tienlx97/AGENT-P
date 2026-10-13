@@ -12,4 +12,5 @@
 Read only task-relevant sources. Preserve main/preload/renderer boundaries.
 A CLI success is not a verified code change. Do not bypass failed checks.
 For UI changes, run the real screen and inspect screenshots at desktop and small sizes.
-Keep legacy symlinks until historical paths have been deliberately migrated.
+Legacy root symlinks have been removed after metadata migration and Git worktree repair.
+Worker tests create disposable fixtures; they must not depend on product worktrees.
